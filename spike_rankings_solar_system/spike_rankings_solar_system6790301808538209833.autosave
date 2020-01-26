@@ -1,0 +1,17 @@
+
+function preload() {
+  // Get the most recent earthquake in the database
+  let url = 'https://earthquake.usgs.gov/earthquakes/feed/v1.0/' +
+    'summary/all_day.geojson';
+  earthquakes = loadJSON(url);
+}
+
+
+function setup() {
+
+}
+
+
+function draw() {
+
+}
