@@ -20,8 +20,6 @@ let Player = function (position, mass) {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
     this.acceleration.mult(0);
-    if (mass > 5000)
-      console.log(mass, this.velocity.mag(), this.position.x, this.position.y);
   }
 
   this.draw = function () {
@@ -31,20 +29,20 @@ let Player = function (position, mass) {
     push();
     translate(this.position.x, this.position.y);
     fill(c, c, c, 250);
-    ellipse(0, 0, r, r);
+    sphere(r);
     pop();
   }
 };
 
 function preload() {
-  blackhole = new Player(createVector(windowWidth/2, windowHeight/2), massBlackhole);
+  blackhole = new Player(createVector(windowWidth/2, windowHeight/2, 1000), massBlackhole);
   players = [
     blackhole,
-    new Player(createVector(500, 500), 20000),
-    new Player(createVector(500, 500), 10000),
-    new Player(createVector(1000, 100), 2800),
-    new Player(createVector(3000, 3000), 2400),
-    new Player(createVector(1000, 2000), 2000),
+    new Player(createVector(500, 500, 100), 20000),
+    new Player(createVector(500, 500, 10), 10000),
+    new Player(createVector(1000, 100, 200), 2800),
+    new Player(createVector(3000, 3000, 10), 2400),
+    new Player(createVector(1000, 2000, 150), 2000),
     new Player(createVector(1000, 1000), 1500),
     new Player(createVector(1000, 500), 1200),
     new Player(createVector(130, 130), 1000),
@@ -70,7 +68,7 @@ function windowResized() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(windowWidth, windowHeight, WEBGL);
   background(100);
 
   slider = createSlider(0, 1, 0.6, 0.001);
