@@ -16,11 +16,6 @@ let Player = function (position, mass) {
     if (mass == 500001)
       return;
 
-    //if (this.velocity.mag() > 10) {
-    //  this.acceleration.mult(0);
-    //  return;
-    //}
-
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
     this.acceleration.mult(0);
@@ -38,12 +33,7 @@ let Player = function (position, mass) {
 
 
 function preload() {
-  //let url = 'file:///C:/data/github/Processing/spikes/spike_rankings_solar_system/players.json';
-  //players = loadJSON(url);
-
   blackhole = new Player(createVector(windowWidth/2, windowHeight/2), 500001);
-  //players = {list: [ { name: "Michel"}, { name: "Geale"} ]};
-  //players = [ new Player(createVector(random(width), random(height)))];
   players = [
     blackhole,
     new Player(createVector(500, 500), 20000),
@@ -90,7 +80,6 @@ function draw() {
   console.log(val);
   var G = 0.00020;
   background(100);
-//  translate(blackhole.position.x / 2, blackhole.position.y / 2);
 
   for (var index = 0; index < players.length; ++index) {
 
@@ -112,7 +101,6 @@ function draw() {
       forceDirection.mult(strength);
 
       thisPlayer.applyForce(forceDirection);
-      //console.log(forceDirection);
     }
 
     players[index].update();
