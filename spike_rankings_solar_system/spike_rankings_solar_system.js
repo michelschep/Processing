@@ -1,6 +1,7 @@
 let players;
 let backhole;
 let slider;
+let massBlackhole = 40001;
 
 let Player = function (position, mass) {
   this.position = position;
@@ -13,7 +14,7 @@ let Player = function (position, mass) {
   }
 
   this.update = function () {
-    if (mass == 500001)
+    if (mass == massBlackhole)
       return;
 
     this.velocity.add(this.acceleration);
@@ -24,16 +25,19 @@ let Player = function (position, mass) {
   }
 
   this.draw = function () {
-    var c = map(this.mass, 0, 500001, 256, 0);
-    var r = map(this.mass, 0, 500001, 3, 250);
-    fill(c, c, c, 100);
-    ellipse(this.position.x, this.position.y, r, r);
+    var c = map(this.mass, 0, massBlackhole, 256, 0);
+    var r = map(this.mass, 0, massBlackhole, 3, 250);
+
+    push();
+    translate(this.position.x, this.position.y);
+    fill(c, c, c, 250);
+    ellipse(0, 0, r, r);
+    pop();
   }
 };
 
-
 function preload() {
-  blackhole = new Player(createVector(windowWidth/2, windowHeight/2), 500001);
+  blackhole = new Player(createVector(windowWidth/2, windowHeight/2), massBlackhole);
   players = [
     blackhole,
     new Player(createVector(500, 500), 20000),
