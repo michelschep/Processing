@@ -24,18 +24,18 @@ let Player = function (position, mass) {
 
   this.draw = function () {
     var c = map(this.mass, 0, massBlackhole, 256, 0);
-    var r = map(this.mass, 0, massBlackhole, 3, 250);
+    var r = map(this.mass, 0, massBlackhole, 10, 100);
 
     push();
     translate(this.position.x, this.position.y);
-    fill(c, c, c, 250);
+//    fill(c, c, c, 250);
     sphere(r);
     pop();
   }
 };
 
 function preload() {
-  blackhole = new Player(createVector(windowWidth/2, windowHeight/2, 1000), massBlackhole);
+  blackhole = new Player(createVector(100, 100, 10), massBlackhole);
   players = [
     blackhole,
     new Player(createVector(500, 500, 100), 20000),
@@ -44,19 +44,19 @@ function preload() {
     new Player(createVector(3000, 3000, 10), 2400),
     new Player(createVector(1000, 2000, 150), 2000),
     new Player(createVector(1000, 1000), 1500),
-    new Player(createVector(1000, 500), 1200),
-    new Player(createVector(130, 130), 1000),
+    //new Player(createVector(1000, 500), 1200),
+    //new Player(createVector(130, 130), 1000),
     new Player(createVector(132, 132), 2),
     new Player(createVector(140, 130), 5),
     new Player(createVector(1000, 700), 800),
-    new Player(createVector(900, 600), 680),
-    new Player(createVector(800, 500), 560),
-    new Player(createVector(700, 400), 340),
-    new Player(createVector(600, 300), 220),
-    new Player(createVector(500, 200), 100),
-    new Player(createVector(400, 100), 80),
-    new Player(createVector(700, 100), 200),
-    new Player(createVector(100, 700), 200),
+    //new Player(createVector(900, 600), 680),
+    //new Player(createVector(800, 500), 560),
+    //new Player(createVector(700, 400), 340),
+    //new Player(createVector(600, 300), 220),
+    //new Player(createVector(500, 200), 100),
+    //new Player(createVector(400, 100), 80),
+    //new Player(createVector(700, 100), 200),
+    //new Player(createVector(100, 700), 200),
     new Player(createVector(200, 10), 10),
     new Player(createVector(280, 10), 500),
     new Player(createVector(50, 400), 10)
@@ -77,9 +77,10 @@ function setup() {
 }
 
 function draw() {
-  let val = slider.value();
-  scale(val);
-  console.log(val);
+  pointLight(255, 0, 0, 10,10,10);
+  //let val = slider.value();
+  //scale(val);
+  //console.log(val);
   var G = 0.00020;
   background(100);
 
