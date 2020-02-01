@@ -1,5 +1,7 @@
-let pos = -1000;
+let pos = -100;
 let run = false;
+let column = 20;
+let white = 4;
 
 function preload() {
   img = loadImage('Spinning_cube_moving_optical_illusion.jpg');
@@ -18,7 +20,7 @@ function draw() {
   image(img, 0, 0);
   fill(0);
   for (var x=0; x< 50; ++x) {
-    rect(pos+(x*23), 0, 20, height);
+    rect(pos+(x*(column+white)), 0, column, height);
   }
   
   if (run) {
