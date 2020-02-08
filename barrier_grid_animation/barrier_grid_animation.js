@@ -1,4 +1,4 @@
-let pos = -100;
+let pos = -1000;
 let run = false;
 let column = 20;
 let white = 4;

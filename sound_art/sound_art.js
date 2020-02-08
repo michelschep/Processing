@@ -68,4 +68,6 @@ function draw() {
 
   stroke(R, G, B);
   ellipse(x, y, r, r);
+  
+  saveFrames('out', 'png', 1, 25);
 }
