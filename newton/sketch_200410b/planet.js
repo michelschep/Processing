@@ -1,8 +1,10 @@
 function Planet() {
   this.location = createVector(width/2, 0);
-  this.speed = createVector(0, 0.1);
+  this.speed = createVector(0, 0.05);
+  this.acceleration = createVector(0, 0.03);
   
   this.update = function() {
+    this.speed.add(this.acceleration);
     this.location.add(this.speed);  
   }
   
