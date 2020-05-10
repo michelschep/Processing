@@ -49,7 +49,7 @@ function Planet(name) {
     
     for (var i=0; i<planets.length; ++i) {
       var planet = planets[i];
-      if (planet.mass == 0) {
+      if (planet.mass < 1) {
         continue;  
       }
       if (planet.name == this.name) {
@@ -65,11 +65,11 @@ function Planet(name) {
       var force = p5.Vector.sub(otherLocation, thisLocation);
       var distance = force.mag();
       force.normalize();
-      var strength = 0.9 * (this.mass * planet.mass)/(distance*distance);
+      var strength = 0.1 * (this.mass * planet.mass)/(distance*distance);
       
-      var repel = distance < (this.mass + planet.mass + 20) && ((this.speed.mag() + planet.speed.mag()) > 8);
-      var merge1 = (distance < (this.mass + planet.mass + 15)) && ((this.speed.mag() + planet.speed.mag()) > 15);
-      var merge2 = distance < (this.mass + planet.mass + 8);//&& (this.speed.mag() + planet.speed.mag()) > 5;
+      var repel = false;//distance < (sqrt(this.mass) + sqrt(planet.mass) + 20) && ((this.speed.mag() + planet.speed.mag()) > 8);
+      var merge1 = (distance < (sqrt(this.mass) + sqrt(planet.mass) + 15)) && ((this.speed.mag() + planet.speed.mag()) > 15);
+      var merge2 = distance < (sqrt(this.mass) + sqrt(planet.mass) + 8);//&& (this.speed.mag() + planet.speed.mag()) > 5;
       
       this.red = 0;
       this.green = 255;
@@ -79,7 +79,7 @@ function Planet(name) {
           
         if (repel) {
           //console.log("REPEL");
-          force.mult(-1 * strength);
+          //force.mult(-1 * strength);
           
         } else {
           //console.log("ATTRACT");
@@ -91,7 +91,7 @@ function Planet(name) {
       if (merge1) {
           console.log("MERGE");
           //this.circle += 0.01;
-          force.mult(strength*1000);
+          //force.mult(strength*1000);
           //this.acceleration.add(planet.acceleration);
                     /*
           if (this.mass > planet.mass) {
@@ -115,7 +115,12 @@ function Planet(name) {
       if (merge2) {
           this.red = 255;
           this.green = 0;
-          force.normalize().mult(-0.02);
+          
+          if (this.mass > planet.mass) {
+            this.deltaMass += planet.mass/2;
+          } else {
+            this.deltaMass -= this.mass/2;  
+          }
       }
         
       this.acceleration.add(force);
@@ -125,7 +130,7 @@ function Planet(name) {
 
     // no add drag force
     // formula = -1 * constant * v2 * v
-    var dragStrength = -1 * 0.01 *  this.speed.mag() * this.speed.mag();
+    var dragStrength = -1 * 0.05 *  this.speed.mag() * this.speed.mag();
     //console.log("speed mag!", this.speed.mag());
     var dragForce = this.speed.copy().normalize().mult(dragStrength);
     //console.log("dragForce", dragForce);
@@ -190,7 +195,7 @@ function Planet(name) {
     //fill(this.red, this.green, 0, this.position.z == 1 ? 255 : 20);
     fill(this.red, this.green, 0);
     //fill(0, 255, 0);
-    ellipse(cart.x, cart.y, this.mass, this.mass);
+    ellipse(cart.x, cart.y, sqrt(this.mass), sqrt(this.mass));
     
     //console.log(cart.x, cart.y);
   }
