@@ -5,7 +5,7 @@ var sign = 1;
 var maxR = 200;
 var planets = [];
 var q = 0;
-var numberOfParticles = 2000;
+var numberOfParticles = 1000;
 var size = 300;
 
 function ConvertFromPolarToCart(v) {
@@ -65,15 +65,22 @@ function Planet(name) {
       var force = p5.Vector.sub(otherLocation, thisLocation);
       var distance = force.mag();
       force.normalize();
-      var strength = 0.1 * (this.mass * planet.mass)/(distance*distance);
+      var strength = 0.8 * (this.mass * planet.mass)/(distance*distance);
       
       var mergeSpeed = ((this.speed.mag() + planet.speed.mag()) > 8);
+      var drag = distance < (sqrt(this.mass) + sqrt(planet.mass) + 4);
       var repel = distance < (sqrt(this.mass) + sqrt(planet.mass) + 3);
       var merge1 = (distance < (sqrt(this.mass) + sqrt(planet.mass) + 2));
       var merge2 = distance < (sqrt(this.mass) + sqrt(planet.mass) + 1);
       
       this.red = 0;
       this.green = 255;
+      
+      if (drag) {
+        var dragStrength1 = -1 * 0.5 *  this.speed.mag() * this.speed.mag();
+        var dragForce1 = this.speed.copy().normalize().mult(dragStrength1);
+        this.acceleration.add(dragForce1);
+      }
       
       if (!mergeSpeed) {
           if (repel) {
@@ -175,7 +182,7 @@ function Planet(name) {
     //fill(this.red, this.green, 0, this.position.z == 1 ? 255 : 20);
     fill(this.red, this.green, 0);
     //fill(0, 255, 0);
-    ellipse(cart.x, cart.y, sqrt(this.mass), sqrt(this.mass));
+    ellipse(cart.x, cart.y, 2*sqrt(this.mass), 2*sqrt(this.mass));
     
     //console.log(cart.x, cart.y);
   }
