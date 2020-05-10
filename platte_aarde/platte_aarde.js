@@ -143,48 +143,15 @@ function Planet(name) {
     if (this.mass < 0) {
        this.mass = 0; 
     }
-    
-    /*
-    this.red = 0;
-    this.green = 255;
-    if (this.mass < 2) {
-      this.red = 255;
-      this.green = 0;
-    }
-    */
-    
-    if (this.position.mag() >= maxR) {
-      //var temp = ConvertFromCartToPolar(this.position);
-      //var temp2 = createVector(maxR, (temp.y + 180)%360);
-      
-      //this.position = ConvertFromPolarToCart(temp2);
-      //this.speed.mult(-1);
-      /*
-      if (this.position.z == -1) {
-        this.position.z = 1; 
-      } else {
-        this.position.z = -1;
-      }*/
-    } 
-    
-    //if (this.position.mag() >= 1.5* maxR) {
-    //  this.position.x = 0;
-    //  this.position.y = 0;
-    //}
   }
 
   this.show = function() {
     var cart = this.position;
-    //var x = this.position.x * cos(this.position.y);
-    //var y = this.position.x * sin(this.position.y);
-
-    strokeWeight(this.position.z == 1 ? 1 : 0.3);
-    //fill(this.red, this.green, 0, this.position.z == 1 ? 255 : 20);
-    fill(this.red, this.green, 0);
-    //fill(0, 255, 0);
-    ellipse(cart.x, cart.y, 2*sqrt(this.mass), 2*sqrt(this.mass));
     
-    //console.log(cart.x, cart.y);
+    strokeWeight(this.position.z == 1 ? 1 : 0.3);
+    fill(this.red, this.green, 0);
+    
+    ellipse(cart.x, cart.y, 2*sqrt(this.mass), 2*sqrt(this.mass));
   }
 }
 
@@ -192,7 +159,6 @@ function setup() {
   angleMode(DEGREES);
   createCanvas(1100, 1100);
   for(qq=0;qq<numberOfParticles;++q) {
-    console.log("Planet", qq);
     planets.push(new Planet(qq));
     ++qq;
   }
