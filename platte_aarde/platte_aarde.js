@@ -67,7 +67,7 @@ function Planet(name) {
       force.normalize();
       var strength = 0.1 * (this.mass * planet.mass)/(distance*distance);
       
-      var repel = false;//distance < (sqrt(this.mass) + sqrt(planet.mass) + 20) && ((this.speed.mag() + planet.speed.mag()) > 8);
+      var repel = distance < (sqrt(this.mass) + sqrt(planet.mass) + 20) && ((this.speed.mag() + planet.speed.mag()) > 8);
       var merge1 = (distance < (sqrt(this.mass) + sqrt(planet.mass) + 15)) && ((this.speed.mag() + planet.speed.mag()) > 15);
       var merge2 = distance < (sqrt(this.mass) + sqrt(planet.mass) + 8);//&& (this.speed.mag() + planet.speed.mag()) > 5;
       
@@ -75,11 +75,9 @@ function Planet(name) {
       this.green = 255;
       
       if (!(merge1 || merge2)) {
-          
-          
         if (repel) {
           //console.log("REPEL");
-          //force.mult(-1 * strength);
+          force.mult(-1 * strength);
           
         } else {
           //console.log("ATTRACT");
