@@ -5,7 +5,7 @@ var sign = 1;
 var maxR = 200;
 var planets = [];
 var q = 0;
-var numberOfParticles = 1000;
+var numberOfParticles = 2000;
 var size = 300;
 
 function ConvertFromPolarToCart(v) {
@@ -67,58 +67,40 @@ function Planet(name) {
       force.normalize();
       var strength = 0.1 * (this.mass * planet.mass)/(distance*distance);
       
-      var repel = distance < (sqrt(this.mass) + sqrt(planet.mass) + 20) && ((this.speed.mag() + planet.speed.mag()) > 8);
-      var merge1 = (distance < (sqrt(this.mass) + sqrt(planet.mass) + 15)) && ((this.speed.mag() + planet.speed.mag()) > 15);
-      var merge2 = distance < (sqrt(this.mass) + sqrt(planet.mass) + 8);//&& (this.speed.mag() + planet.speed.mag()) > 5;
+      var mergeSpeed = ((this.speed.mag() + planet.speed.mag()) > 8);
+      var repel = distance < (sqrt(this.mass) + sqrt(planet.mass) + 3);
+      var merge1 = (distance < (sqrt(this.mass) + sqrt(planet.mass) + 2));
+      var merge2 = distance < (sqrt(this.mass) + sqrt(planet.mass) + 1);
       
       this.red = 0;
       this.green = 255;
       
-      if (!(merge1 || merge2)) {
-        if (repel) {
-          //console.log("REPEL");
-          force.mult(-1 * strength);
-          
-        } else {
-          //console.log("ATTRACT");
-          ++attracted;
-          force.mult(strength);
-        }
+      if (!mergeSpeed) {
+          if (repel) {
+            //console.log("REPEL");
+            force.mult(-1 * strength);
+            
+          } else {
+            //console.log("ATTRACT");
+            ++attracted;
+            force.mult(strength);
+          }
       }
       
-      if (merge1) {
-          console.log("MERGE");
-          //this.circle += 0.01;
-          //force.mult(strength*1000);
-          //this.acceleration.add(planet.acceleration);
-                    /*
-          if (this.mass > planet.mass) {
-            this.deltaMass += planet.mass/2;
-          } else {
-            this.deltaMass -= this.mass/2;  
-          }
-          */
-          
-          /*
-          this.mass += 0.2;  
-          planet.mass -= 0.2;
-          if (planet.mass < 0) {
-             planet.mass = 0; 
-          }
-           if (this.mass > 30) {
-             planet.mass = 30; 
-          }
-          */
-      }
-      if (merge2) {
-          this.red = 255;
-          this.green = 0;
-          
-          if (this.mass > planet.mass) {
-            this.deltaMass += planet.mass/2;
-          } else {
-            this.deltaMass -= this.mass/2;  
-          }
+      if (mergeSpeed) {
+        if (merge1) {
+            console.log("MERGE");
+        }
+        if (merge2) {
+            this.red = 255;
+            this.green = 0;
+            
+            if (this.mass > planet.mass) {
+              this.deltaMass += planet.mass/2;
+            } else {
+              this.deltaMass -= this.mass/2;  
+            }
+        }
       }
         
       this.acceleration.add(force);
