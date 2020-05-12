@@ -79,7 +79,7 @@ function Planet(name) {
       var distance = force.mag();
       force.normalize();    
       var drag = distance < (this.mass + planet.mass + 5);    
-      var repel = distance < (sqrt(this.mass) + sqrt(planet.mass) + 2);
+      var repel = distance < 2;// (sqrt(this.mass) + sqrt(planet.mass) + 2);
       var merge = distance < 1.4;//(sqrt(this.mass) + sqrt(planet.mass) + 0.1);
       
       if (merge) {
