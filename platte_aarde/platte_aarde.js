@@ -2,7 +2,7 @@ var r = 0;
 var angle = 0;
 var front = true;
 var sign = 1;
-var maxR = 500;
+var maxR = 300;
 var planets = [];
 var q = 0;
 var numberOfParticles = 1000;
@@ -85,9 +85,9 @@ function Planet(name) {
       if (merge) {
          var dest = p5.Vector.add(planet.position, planet.speed);
          var targetSpeed = p5.Vector.sub(dest, this.position);
-         targetSpeed.normalize().mult(8);
+         targetSpeed.normalize().mult(5);
          var targetForce = p5.Vector.sub(targetSpeed, this.speed);
-         this.acceleration.add(targetSpeed);
+         this.acceleration.add(targetForce);
          this.red = 255;
          this.green = 0;
          continue;
@@ -160,7 +160,7 @@ function draw() {
   if (maxR < 500) {
      //maxR += 0.5; 
   }
-  scale(0.4);
+  scale(0.7);
   strokeWeight(0);
   fill(255, 255, 255);
   ellipse(0, 0, 2*maxR, 2*maxR);
