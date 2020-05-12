@@ -29,13 +29,13 @@ function ConvertFromCartToPolar(v) {
 }
 
 function Planet(name) {
-  this.position = ConvertFromPolarToCart(createVector(random(maxR), random(360), 1));
+  this.position = ConvertFromPolarToCart(createVector(random(maxR-20, maxR-10), random(360), 1));
   //this.position = ConvertFromPolarToCart(createVector(maxR, 180, 1));
   this.red = 0;
   this.green = 255;
   this.sign = 1;
   this.name = name;
-  this.speed = ConvertFromPolarToCart(createVector(0.8, random(360)));
+  this.speed = ConvertFromPolarToCart(createVector(10, random(360)));
   //this.speed = ConvertFromPolarToCart(createVector(1, 0));
   this.acceleration = createVector(0,0);
   this.mass = 1; 
@@ -55,7 +55,7 @@ function Planet(name) {
       dragForce = this.speed.copy().normalize().mult(dragStrength);     
       this.acceleration.add(dragForce);
     } else {
-      dragStrength = -1 * 0.005 *  this.speed.mag() * this.speed.mag();  
+      dragStrength = -1 * 0.004 *  this.speed.mag() * this.speed.mag();  
       dragForce = this.speed.copy().normalize().mult(dragStrength);
       this.acceleration.add(dragForce);
     }
@@ -78,9 +78,9 @@ function Planet(name) {
       var force = p5.Vector.sub(otherLocation, thisLocation);
       var distance = force.mag();
       force.normalize();    
-      var drag = distance < (this.mass + planet.mass + 5);    
+      var drag = distance < 5; //(this.mass + planet.mass + 5);    
       var repel = distance < 2;// (sqrt(this.mass) + sqrt(planet.mass) + 2);
-      var merge = distance < 1.4;//(sqrt(this.mass) + sqrt(planet.mass) + 0.1);
+      var merge = distance < 0.5;//(sqrt(this.mass) + sqrt(planet.mass) + 0.1);
       
       if (merge) {
          var dest = p5.Vector.add(planet.position, planet.speed);
@@ -106,14 +106,14 @@ function Planet(name) {
         continue;
       }
       
-      strength = 0.08 * (this.mass * planet.mass)/(distance*distance);
+      strength = 0.05 * (this.mass * planet.mass)/(distance*distance);
       this.acceleration.add(force.mult(strength));
     }
   }
   
   this.update = function() {
     this.speed.add(this.acceleration);
-    this.speed.limit(3);
+    this.speed.limit(10);
     var thisLocation = this.position;   
     thisLocation.add(this.speed);
     var newPolar = thisLocation;
