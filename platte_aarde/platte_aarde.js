@@ -2,7 +2,7 @@ var r = 0;
 var angle = 0;
 var front = true;
 var sign = 1;
-var maxR = 300;
+var maxR = 200;
 var planets = [];
 var q = 0;
 var numberOfParticles = 1000;
@@ -29,16 +29,16 @@ function ConvertFromCartToPolar(v) {
 }
 
 function Planet(name) {
-  this.position = ConvertFromPolarToCart(createVector(random(maxR-20, maxR-10), random(360), 1));
+  this.position = ConvertFromPolarToCart(createVector(random(1, 10), random(360), 1));
   //this.position = ConvertFromPolarToCart(createVector(maxR, 180, 1));
   this.red = 0;
   this.green = 255;
   this.sign = 1;
   this.name = name;
-  this.speed = ConvertFromPolarToCart(createVector(10, random(360)));
+  this.speed = ConvertFromPolarToCart(createVector(20, random(360)));
   //this.speed = ConvertFromPolarToCart(createVector(1, 0));
   this.acceleration = createVector(0,0);
-  this.mass = 1; 
+  this.mass = 1;//random(2); 
   this.circle = 1;
   this.deltaMass = 0;
   
@@ -78,36 +78,38 @@ function Planet(name) {
       var force = p5.Vector.sub(otherLocation, thisLocation);
       var distance = force.mag();
       force.normalize();    
-      var drag = distance < 5; //(this.mass + planet.mass + 5);    
-      var repel = distance < 2;// (sqrt(this.mass) + sqrt(planet.mass) + 2);
-      var merge = distance < 0.5;//(sqrt(this.mass) + sqrt(planet.mass) + 0.1);
+      
+      var drag = distance < 20; //(this.mass + planet.mass + 5);    
+      var repel = distance < 4;// (sqrt(this.mass) + sqrt(planet.mass) + 2);
+      var merge = distance < 0.1;//(sqrt(this.mass) + sqrt(planet.mass) + 0.1);
       
       if (merge) {
          var dest = p5.Vector.add(planet.position, planet.speed);
          var targetSpeed = p5.Vector.sub(dest, this.position);
-         targetSpeed.normalize().mult(5);
+         targetSpeed.normalize().mult(1);
          var targetForce = p5.Vector.sub(targetSpeed, this.speed);
-         this.acceleration.add(targetForce);
+         //this.acceleration.add(targetForce);
          this.red = 255;
          this.green = 0;
          continue;
       }
       
       if (repel) {
-        var strength = -0.1 * (this.mass * planet.mass)/(distance*distance);
-        this.acceleration.add(force.mult(strength));
+        var strength = -100 * (this.mass * planet.mass)/(distance*distance);
+        //this.acceleration.add(force.mult(strength));
         continue;
       }
       
       if (drag) {
-        var dragStrength1 = -1 * 0.05 *  this.speed.mag() * this.speed.mag();
+        var dragStrength1 = -1 * (1/distance) *  this.speed.mag() * this.speed.mag();
         var dragForce1 = this.speed.copy().normalize().mult(dragStrength1);
         this.acceleration.add(dragForce1);
         continue;
       }
       
-      strength = 0.05 * (this.mass * planet.mass)/(distance*distance);
-      this.acceleration.add(force.mult(strength));
+     
+      strength = 0.09 * (this.mass * planet.mass)/(distance*distance);
+      //this.acceleration.add(force.mult(strength));
     }
   }
   
