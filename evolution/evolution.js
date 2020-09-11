@@ -1,6 +1,6 @@
 food = [];
 var population = [];
-var sizeBlock = 10;
+
 var food = [];
 var dead = 0;
 var alive = 0;
@@ -11,6 +11,10 @@ var xoff;
 var yoff;
 var maxX = 20;
 var maxY = 20;
+var sizeBlock = 10;
+var maxSpeed = 2;
+var cx= 10;
+var cy = 10;
 
 function Food() {
     this.position = createVector(map(noise(xoff), 0, 1, 10, windowWidth - 10), map(noise(yoff), 0, 1, 10, windowHeight - 10));
@@ -21,15 +25,12 @@ function Food() {
     }
 }
 
-
 function arr(a, x, y) {
     if (x < 0 || x >= maxX || y < 0 || y >= maxY)
         return 0;
 
     return a[x][y];
 }
-
-
 
 function Block(fitness, position) {
     this.fitness = fitness;
@@ -51,23 +52,54 @@ function Creature2(dna, position) {
     this.dna = dna;
     this.target = null;
     this.alive = true;
+    this.target;
+    this.angle = 0;
 
     for (var x = 0; x < maxX; ++x)
         for (var y = 0; y < maxY; ++y) {
             if (this.dna[x][y] == 1) {
-                //console.log("PUSH", x, y);
                 this.blocks.push(new Block(200, createVector(x, y)));
             }
         }
 
-    //this.color = createVector(map(this.blocks.length, 0, 25, 50, 256), 50, 50);
     this.color = createVector(random(256), random(256), random(256));
+
+    this.mass = function () {
+        return this.blocks.length;
+    }
+
+    this.center = function () {
+        var centerOfGravityThis = createVector(0, 0);
+        for (var b = 0; b < this.blocks.length; ++b) {
+            centerOfGravityThis.add(createVector(sizeBlock * this.blocks[b].position.x, sizeBlock * this.blocks[b].position.y));
+        }
+        var factor = (1 / this.blocks.length);
+        centerOfGravityThis.mult(factor);
+        result = p5.Vector.add(centerOfGravityThis, this.position);
+
+        return result;
+    }
+
+    this.size = function() {
+       var maxSize = -Infinity;
+
+        for (var b = 0; b < this.blocks.length; ++b) {
+            var p = this.blocks[b].position;
+            var d = p.dist(createVector(cx, cy))+1;    
+            if (d> maxSize)
+                maxSize = d;
+        }
+
+        var pixels = (maxSize) * (sqrt(cx**2 + cy**2));
+        return pixels;
+    }
 
     this.update = function () {
         if (!this.alive)
             return;
 
         this.fitness -= 0.1;//(0.1 * this.blocks.length * (1 + this.velocity.mag()));
+        this.angle += 1;
 
         if (this.fitness <= 0 || this.blocks.length == 0) {
             ++dead;
@@ -78,54 +110,30 @@ function Creature2(dna, position) {
             return;
         }
 
-        var centerOfGravityThis = createVector(0, 0);
-        for (var b = 0; b < this.blocks.length; ++b) {
-            centerOfGravityThis.add(this.blocks[b].position);
-        }
-        var factor = (1 / this.blocks.length);
-        centerOfGravityThis.mult(factor);
-        centerOfGravityThis = p5.Vector.add(centerOfGravityThis, this.position);
-
-        // Repel
+        // Repel and drag other creature
         var choose = -1;
         var record = Infinity;
         for (var c = 0; c < population.length; ++c) {
             if (population[c].index != this.index) {
                 var other = population[c];
 
-                var centerOfGravityOther = createVector(0, 0);
-                for (var b = 0; b < other.blocks.length; ++b) {
-                    centerOfGravityOther.add(other.blocks[b].position);
-                }
+                var distance = this.center().dist(other.center());
 
-                var factor = (1 / other.blocks.length);
-                centerOfGravityOther.mult(factor);
-                centerOfGravityOther = p5.Vector.add(centerOfGravityOther, other.position);
+                if (distance < 20 + this.size()) {
+                    // REPEL OTHER CREATE
+                    var forceMag = 150 * (this.mass() * other.mass()) / (distance ** 2);
+                    var force = p5.Vector.sub(other.center(), this.center()).normalize().mult(-1 * forceMag);
+                    this.acceleration.add(force.div(this.mass()));
 
-                var d = centerOfGravityThis.dist(centerOfGravityOther);
+                    // DRAG
+                    var dirrectionForce = this.velocity.copy().normalize();
+                    var speed = this.velocity.mag();
+                    var density = other.mass() / (distance ** 2)
+                    var dragForce = dirrectionForce.mult(-1 * 0.01 * density * (speed ** 2));
 
-                if (d < record) {
-                    choose = c;
-                    record = d;
+                    this.acceleration.add(dragForce.div(this.mass()));
                 }
             }
-        }
-
-        if (choose > -1 && record < 10) {
-            //if (record < 1) {
-            //    var angle = random(2 * 3.14);
-            //    var desired = p5.Vector.add(this.position, createVector(this.position.x + cos(angle), this.position.y + sin(angle)));
-            //    var steer = p5.Vector.sub(desired, this.velocity).normalize().mult(2 * population[choose].blocks.length);
-                //this.acceleration.add(steer);
-            //} else {
-                //var desired = p5.Vector.sub(population[choose].position, this.position).normalize().mult(-50 * population[choose].blocks.length);
-                //var steer = p5.Vector.sub(desired, this.velocity).limit(10);
-                //this.acceleration.add(steer);
-                var v = this.velocity.normalize();
-                var m = this.velocity.mag();
-                var f = v.mult(-1 * 0.01 * m*m);
-                this.acceleration.add(f);
-            //}
         }
 
         // EAT
@@ -133,15 +141,7 @@ function Creature2(dna, position) {
         var record = Infinity;
 
         for (var f = 0; f < food.length; ++f) {
-            var centerOfGravity = createVector(0, 0);
-            for (var b = 0; b < this.blocks.length; ++b) {
-                centerOfGravity.add(this.blocks[b].position);
-            }
-            var factor = (1 / this.blocks.length);
-            centerOfGravity.mult(factor);
-            var p = p5.Vector.add(centerOfGravity, this.position);
-
-            var d = p.dist(food[f].position);
+            var d = this.center().dist(food[f].position);
             if (d < record) {
                 choose = f;
                 record = d;
@@ -149,27 +149,35 @@ function Creature2(dna, position) {
         }
 
         if (choose > -1) {
-            if (record < 10) {
+            if (record < 5) {
                 this.fitness += 5;
                 food.splice(choose, 1);
             } else {
-                var desired = p5.Vector.sub(food[choose].position, this.position).normalize().mult(2);
-                var steer = p5.Vector.sub(desired, this.velocity).limit(0.01);
-                this.acceleration.add(steer);
+                var targetVelocity = p5.Vector.sub(food[choose].position, this.center()).normalize().mult(maxSpeed);
+                var steerForce = p5.Vector.sub(targetVelocity, this.velocity).limit(0.1);
+                this.acceleration.add(steerForce.div(this.mass()));
+                this.target = food[choose];
             }
         }
 
-        // MOVE
-        this.velocity.add(this.acceleration).limit(1/this.blocks.length);
-        this.position.add(this.velocity);
+        // AIR DRAG
+        var dirrectionForce = this.velocity.copy().normalize();
+        var speed = this.velocity.mag();
+        var density = 0.01;
+        var dragForce = dirrectionForce.mult(-1 * density * (speed ** 2));
+        this.acceleration.add(dragForce.div(this.mass()));
 
+        // MOVE
+        this.velocity.add(this.acceleration).limit(maxSpeed / this.blocks.length);
+        this.position.add(this.velocity);
         this.acceleration.mult(0);
 
+        // REPRODUCE
         if (random(1) < 0.0005 && this.fitness > 200) {
             ++born;
             //var a = genesToArray(this.dna.genes);
-            var x = Math.round(map(random(1), 0, 1, 0, maxX-1));
-            var y = Math.round(map(random(1), 0, 1, 0, maxY-1));
+            var x = Math.round(map(random(1), 0, 1, 0, maxX - 1));
+            var y = Math.round(map(random(1), 0, 1, 0, maxY - 1));
 
             var newGenes = [...this.dna];
 
@@ -206,22 +214,40 @@ function Creature2(dna, position) {
             }
             this.fitness -= 200;
             var angle = map(random(1), 0, 1, 0, 3.1415);
-            var newX= 100* cos(angle);
-            var newY= 100* sin(angle);
+            var newX = 100 * cos(angle);
+            var newY = 100 * sin(angle);
             population.push(new Creature2(newGenes, this.position.copy().add(createVector(newX, newY))));
         }
     }
 
 
     this.show = function () {
+        fill(255, 0, 0);
+        //ellipse(this.center().x, this.center().y, this.size());
+
         push();
         translate(this.position.x, this.position.y);
-        fill(this.color.x, this.color.y, this.color.z, map(this.fitness,0, 500, 0, 256));
+        //rotate(this.angle / 3.0);
+        //rotate(this.angle);
+        //noFill();
+        //rect(0, 0, maxX*sizeBlock, maxY*sizeBlock);
+        stroke(this.color.x, this.color.y, this.color.z, map(this.fitness, 0, 500, 0, 256))
+        fill(this.color.x, this.color.y, this.color.z, map(this.fitness, 0, 500, 0, 256));
         this.blocks.forEach(item => {
             item.show();
         });
         pop();
 
+        //var c = this.center();
+        //noFill();
+        //stroke(255, 0, 0);
+        //ellipse(c.x, c.y, 10);
+
+        if (this.target != null) {
+            //stroke(100);
+            //fill(255);
+            //line(this.position.x, this.position.y, this.target.position.x, this.target.position.y)
+        }
     }
 
 }
@@ -232,7 +258,7 @@ function setup() {
     xoff = map(random(1), 0, 1, 0, 100000);
     yoff = map(random(1), 0, 1, 0, 100000);
 
-    for (var n = 1; n < 10; ++n) {
+    for (var n = 1; n < 5; ++n) {
 
         var genes = new Array(maxX);
         for (var x = 0; x < maxX; ++x) {
@@ -242,14 +268,14 @@ function setup() {
             }
         }
 
-        genes[0][0] = 1;
+        genes[cx][cy] = 1;
 
         var angle = map(random(1), 0, 1, 0, 360);
-        var newX= 200* cos(angle);
-        var newY= 200* sin(angle);
+        var newX = 200 * cos(angle);
+        var newY = 200 * sin(angle);
         population.push(new Creature2(genes, createVector(400, 400).add(createVector(newX, newY))));
     }
-    for (var n = 1; n < 200; ++n) {
+    for (var n = 1; n < 20; ++n) {
         food.push(new Food());
     }
 }
@@ -257,7 +283,7 @@ function setup() {
 
 function draw() {
     background(0);
-    console.log("!!!!!dead alive mutate born", dead, alive, mutate, born);
+    console.log("!!!!!dead alive mutate born", dead, alive, mutate, born, population.length, food.length);
 
     if (random(1) > 0.995) {
         xoff += 0.5;
@@ -266,14 +292,14 @@ function draw() {
     xoff += 0.01;
     yoff += 0.01;
 
-    for (var n= population.length-1; n>=0; --n) {
+    for (var n = population.length - 1; n >= 0; --n) {
         if (!population[n].alive) {
-            var o = population[n];
-            population.slice(n, 1);
-            delete o;
+            //var o = population[n];
+            population.splice(n, 1);
+            //delete o;
         }
     }
-    if (food.length < alive*2 && random(1) > 0.1)
+    if (food.length < alive * 2 && random(1) > 0.1)
         food.push(new Food());
 
     population.forEach(element => {
