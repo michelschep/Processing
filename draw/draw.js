@@ -13,7 +13,7 @@ console.log('hallo');
   
   // Load the model first
   function preload() {
-    console.log('preload');
+    
     classifier = ml5.imageClassifier(imageModelURL + 'model.json', modelLoaded);
     console.log(classifier);
   }
