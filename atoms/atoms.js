@@ -21,7 +21,7 @@ function Atom() {
         atoms.forEach(element => {
             if (this.index != element.index) {
             var distance = dist(element.position.x, element.position.y, this.position.x, this.position.y) + 0.001;
-            var sigma = 200;
+            var sigma = 100;
             //console.log('position', element.position, element.position);
             //console.log('distance',distance);
             var forceMag = (-24/distance) * (Math.pow(sigma/distance, 12) - Math.pow(sigma/distance, 6));
@@ -50,15 +50,44 @@ function Atom() {
 
     this.show = function() {
         fill(this.color);
+        noStroke();
         ellipse(this.position.x, this.position.y, 5);
     }
 }
 
 function setup() {
+    w = displayWidth;
+    h = displayHeight;
     createCanvas(w, h);
-    background(125, 125, 125);
+    background(0);
 
     atoms = [];
+    var center = createVector(w/2, h/2);
+
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
+    atoms.push(new Atom());
     atoms.push(new Atom());
     atoms.push(new Atom());
     atoms.push(new Atom());
