@@ -71,7 +71,7 @@ function Atom() {
         if (this.index < fixedAtoms)
             ellipse(this.position.x, this.position.y, 0);
         else
-            ellipse(this.position.x, this.position.y, 5);
+            ellipse(this.position.x, this.position.y, .4);
 x
     }
 }
@@ -95,7 +95,7 @@ async function setup() {
         angle += 2*3.14/fixedAtoms;
     }
 
-    for (var w1=0;w1<200;++w1) {
+    for (var w1=0;w1<300;++w1) {
         atoms.push(new Atom());
     }
 
