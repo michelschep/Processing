@@ -38,10 +38,15 @@ function Atom() {
             this.acceleration.add(force); 
             }
         });
+       
+        if (dist(this.position.x, this.position.y, w/2, h/2) > 400) {
+            this.velocity.mult(0);
+        } else {
+            this.velocity.add(this.acceleration).limit(50);
+            this.acceleration.mult(0);
+            this.position.add(this.velocity);
+        }
 
-        this.velocity.add(this.acceleration).limit(5);
-        this.acceleration.mult(0);
-        this.position.add(this.velocity);
         /*
         if (this.position.x < 0) {
             this.position.x = 0;
