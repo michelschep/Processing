@@ -39,13 +39,15 @@ function Atom() {
             }
         });
        
+        this.velocity.add(this.acceleration).limit(4);
         if (dist(this.position.x, this.position.y, w/2, h/2) > 400) {
-            this.velocity.mult(-1);
+            this.velocity.mult(0);
         } else {
-            this.velocity.add(this.acceleration).limit(1);
-            this.acceleration.mult(0);
-            this.position.add(this.velocity);
+           
         }
+
+        this.acceleration.mult(0);
+        this.position.add(this.velocity);
 
         /*
         if (this.position.x < 0) {
@@ -69,7 +71,7 @@ function Atom() {
         if (this.index < fixedAtoms)
             ellipse(this.position.x, this.position.y, 0);
         else
-            ellipse(this.position.x, this.position.y, 1);
+            ellipse(this.position.x, this.position.y, 5);
 x
     }
 }
