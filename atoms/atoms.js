@@ -40,9 +40,9 @@ function Atom() {
         });
        
         if (dist(this.position.x, this.position.y, w/2, h/2) > 400) {
-            this.velocity.mult(0);
+            this.velocity.mult(-1);
         } else {
-            this.velocity.add(this.acceleration).limit(50);
+            this.velocity.add(this.acceleration).limit(1);
             this.acceleration.mult(0);
             this.position.add(this.velocity);
         }
