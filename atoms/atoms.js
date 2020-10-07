@@ -10,7 +10,7 @@ function Atom() {
         this.position = createVector(w/2, h/2);
     else {
         var angle = random(1) * 2 * 3.14;
-        var r = random(5);
+        var r = random(2);
         var x = r * cos(angle);
         var y = r * sin(angle);
 
@@ -39,9 +39,10 @@ function Atom() {
             }
         });
 
-        this.velocity.add(this.acceleration).limit(2.5);
+        this.velocity.add(this.acceleration).limit(4);
         this.acceleration.mult(0);
         this.position.add(this.velocity);
+        /*
         if (this.position.x < 0) {
             this.position.x = 0;
         }
@@ -54,6 +55,7 @@ function Atom() {
         if (this.position.y> h) {
             this.position.y = h;
         }
+        */
     }
 
     this.show = function() {
@@ -62,7 +64,7 @@ function Atom() {
         if (this.index < fixedAtoms)
             ellipse(this.position.x, this.position.y, 0);
         else
-            ellipse(this.position.x, this.position.y, 1);
+            ellipse(this.position.x, this.position.y, 0.4);
 x
     }
 }
@@ -86,90 +88,9 @@ async function setup() {
         angle += 2*3.14/fixedAtoms;
     }
 
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
-    atoms.push(new Atom());
+    for (var w1=0;w1<200;++w1) {
+        atoms.push(new Atom());
+    }
 
     start = true;
     keyPressed();
