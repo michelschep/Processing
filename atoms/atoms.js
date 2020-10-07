@@ -39,7 +39,7 @@ function Atom() {
             }
         });
 
-        this.velocity.add(this.acceleration).limit(4);
+        this.velocity.add(this.acceleration).limit(5);
         this.acceleration.mult(0);
         this.position.add(this.velocity);
         /*
@@ -64,7 +64,7 @@ function Atom() {
         if (this.index < fixedAtoms)
             ellipse(this.position.x, this.position.y, 0);
         else
-            ellipse(this.position.x, this.position.y, 0.4);
+            ellipse(this.position.x, this.position.y, 1);
 x
     }
 }
