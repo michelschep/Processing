@@ -145,7 +145,7 @@ function Atom(pt) {
             }
         });
 
-        this.velocity.add(this.acceleration).limit(2);
+        this.velocity.add(this.acceleration).limit(1);
         this.acceleration.mult(0);
         this.position.add(this.velocity);
 

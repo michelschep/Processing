@@ -1,4 +1,5 @@
 let mic;
+let fft;
 let record = 0;
 let bolletje = 0;
 let anderBolletje;
@@ -18,8 +19,8 @@ function Particle(x, y) {
      
      if (this.y > height) {
         this.y = height;
-        this.yspeed *= -0.9;
-        song.play();
+        this.yspeed *= -0.5;
+        //song.play();
      }
   };
   
@@ -40,11 +41,36 @@ function setup() {
   mic = new p5.AudioIn();
   mic.start();
   song = loadSound('fart.wav');
+
+  fft = new p5.FFT();
+  fft.setInput(mic);
 }
 
 function draw() {
-  background(0);
+  let spectrum = fft.analyze();
+  console.log('drwa');
+  var rgb = [0, 0, 0];
+  var index = 0;
+  for (let i = 0; i < spectrum.length; i++) {
+    var q = map(spectrum[i], 0, 255, 0, 255);
+    if (q>0) {
+      rgb[index%3] = (rgb[index%3] < q) ? q : rgb[index%3];
+      ++index;
+    }
+  }
+
+  background(rgb[0], rgb[1], rgb[2]);
   
+/*
+  noStroke();
+  fill(255, 0, 255);
+  for (let i = 0; i< spectrum.length; i++){
+    let x = map(i, 0, spectrum.length, 0, width);
+    let h = -height + map(spectrum[i], 0, 255, height, 0);
+    rect(x, height, width / spectrum.length, h )
+  }
+*/
+
   for (var x =0; x< particles.length; ++x) {
     particles[x].update();
     particles[x].show();
