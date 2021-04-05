@@ -18,8 +18,11 @@ var dB = 0.5;
 var feed = 0.055;
 var k = 0.062;
 
+let w = 150;
+let h = 150;
+
 function setup() {
-  createCanvas(300, 300);
+  createCanvas(w, h);
   pixelDensity(1);
   grid = [];
   next = [];
@@ -38,10 +41,10 @@ function setup() {
     }
   }
 
-  var block = 5;
-  for (u = 1; u < 2; u++) {
-    var x1 = 150;//floor(random(50, width-50));
-    var y1 = 150;//floor(random(50, height-50));
+  var block = 3;
+  for (u = 1; u < 8; u++) {
+    var x1 = w/2 + floor(random(-20, 20));
+    var y1 = h/2 + floor(random(-20, 20));
     for (var i = x1; i < x1 + block; i++) {
       for (var j = y1; j < y1 + block; j++) {
         grid[i][j].b = 1;random(0.1);
@@ -90,11 +93,7 @@ function draw() {
 
  
 
-// doolhof
-dA = 0.2097;
-dB = 0.1050;
-feed = 0.0540;
-k = 0.0620;
+
 
  
 
@@ -125,6 +124,12 @@ dA = 0.2097;
 dB = 0.1050;
 feed = 0.014;
 k = 0.053;
+
+// doolhof
+dA = 0.2097;
+dB = 0.1050;
+feed = 0.0540;
+k = 0.0620;
 
   for (var x = 1; x < width - 1; x++) {
     for (var y = 1; y < height - 1; y++) {
